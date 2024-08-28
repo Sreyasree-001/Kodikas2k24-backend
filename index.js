@@ -1,8 +1,12 @@
 const express = require("express");
-
+const router = require("./routers/auth-router");
 const app = express();
+
+//Mounting the router
+app.use("/auth",router);
+
+//Server port 
 const PORT = 8000;
-app.get("/",(req, res) => {
-    return res.send("Hello from server page");
-})
+
+//Starting the server
 app.listen(PORT, () => console.log(`Server is running at PORT:${PORT}`));
