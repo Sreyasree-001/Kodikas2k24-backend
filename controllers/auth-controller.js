@@ -1,3 +1,5 @@
+const Team = require("../models/team-model");
+
 //Home page logic 
 
 const home = (req, res) => {
@@ -10,11 +12,27 @@ const home = (req, res) => {
 
 //Registration page logic
 
-const register = (req, res) => {
+const register = async (req, res) => {
     try {
-        res.status(200).send("Welcome to the registration page");
+
+        console.log(req.body);
+
+
+        // Error occuring here, so commented out
+        /*const {teamname, name1, class1, rollno1, email1} = req.body;
+
+        const result = await Team.create({
+            "team_name": teamname,
+            "memberName_1": name1,
+            "class_1": class1,
+            "rollNo_1": rollno1,
+            "emailId_1": email1
+        });*/
+        res.status(200).json({'success': req.body});
+
     } catch (error) {
-        res.status(400).send("Error");
+        console.log(error);
+        res.status(400).send(error);
     }
 };
 
