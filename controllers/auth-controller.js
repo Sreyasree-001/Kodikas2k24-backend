@@ -11,8 +11,22 @@ const home = (req, res) => {
 };
 
 //Registration page logic
-const registerGet = (req, res) =>{
-  return res.send("This is registration page")
+const registerGet = async (req, res) =>{
+  //return res.send("This is registration page");
+  const allData = await Team.find().lean();
+  if (allData.length === 0) {
+    return res.status(201).json({
+      success: true,
+      message: "No teams found",
+      data: [],
+    });
+  } else {
+    return res.status(201).json({
+      success: true,
+      message: "This are the registered teams",
+      data: allData,
+    });
+  }
 }
 const registerPost = async (req, res) => {
 
@@ -26,21 +40,6 @@ const registerPost = async (req, res) => {
           return res.status(500).json({
             success: false,
             message: "Error saving team",
-          });
-        }
-
-        const allData = await Team.find().lean();
-        if (allData.length === 0) {
-          return res.status(201).json({
-            success: true,
-            message: "Team created successfully, but no other teams found",
-            data: [],
-          });
-        } else {
-          return res.status(201).json({
-            success: true,
-            message: "Team created successfully",
-            data: allData,
           });
         }
     } catch (e) {
