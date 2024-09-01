@@ -10,7 +10,7 @@ app.use(express.json());
 app.use("/api/auth",router);
 
 //Server port 
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
 connectDb().then(() => {
     app.listen( PORT, () => {

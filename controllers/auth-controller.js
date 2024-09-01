@@ -11,28 +11,45 @@ const home = (req, res) => {
 };
 
 //Registration page logic
+const registerGet = (req, res) =>{
+  return res.send("This is registration page")
+}
+const registerPost = async (req, res) => {
 
-const register = async (req, res) => {
     try {
+        const teamData = req.body;
+        try {
+          const newTeam = await Team.create(teamData);
+        } catch (saveError) {
+          console.error(`Error saving team: ${saveError.message}`);
+          console.error(saveError.stack);
+          return res.status(500).json({
+            success: false,
+            message: "Error saving team",
+          });
+        }
 
-        console.log(req.body);
-
-
-        // Error occuring here, so commented out
-        /*const {teamname, name1, class1, rollno1, email1} = req.body;
-
-        const result = await Team.create({
-            "team_name": teamname,
-            "memberName_1": name1,
-            "class_1": class1,
-            "rollNo_1": rollno1,
-            "emailId_1": email1
-        });*/
-        res.status(200).json({'success': req.body});
-
-    } catch (error) {
-        console.log(error);
-        res.status(400).send(error);
+        const allData = await Team.find().lean();
+        if (allData.length === 0) {
+          return res.status(201).json({
+            success: true,
+            message: "Team created successfully, but no other teams found",
+            data: [],
+          });
+        } else {
+          return res.status(201).json({
+            success: true,
+            message: "Team created successfully",
+            data: allData,
+          });
+        }
+    } catch (e) {
+        console.error(`Error creating team: ${e.message}`);
+        console.error(e.stack);
+        return res.status(500).json({
+          success: false,
+          message: "Internal Server Error",
+      });
     }
 };
 
@@ -46,4 +63,4 @@ const about = (req, res) => {
     }
 };
 
-module.exports = {home, register, about};
+module.exports = {home,registerGet, registerPost, about};

@@ -1,61 +1,53 @@
 const mongoose = require('mongoose');
 
 const TeamSchema = new mongoose.Schema({
-    team_name : {
-        type : String,
-        required : true,
-        unique : true
-    },
-
-    // memberDetail_1
-    memberName_1: {
-        type : String,
-        required : true
-    },
-    class_1: {
-        type : String,
-        required : true
-    },
-    rollNo_1: {
-        type : String,
-        required : true
-    },
-    emailId_1: {
-        type : String,
-        required : true,
-        unique: true
-    },
-    phone_1: {
-        type : String,
-        required : true
-    },
-
-    // memberDetail_2
-    memberName_2: {
-        type : String,
-        required : true
-    },
-    class_2: {
-        type : String,
-        required : true
-    },
-    rollNo_2: {
-        type : String,
-        required : true
-    },
-    emailId_2: {
-        type : String,
-        required : true,
-        unique: true
-    },
-    phone_2: {
-        type : String,
-        required : true
-    },
-    isAdmin :{
-        type : Boolean,
-        default : false
-    }
+  teamName: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  firstMemName:{
+    type: String,
+    required: true,
+  },
+  firstMemEmail: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  firstMemClass:{
+    type: String,
+    required: true,
+  },
+  firstMemRoll:{
+    type: String,
+    required: true,
+  },
+  firstMemPh:{
+    type: String,
+    required: true,
+  },
+  secMemName: {
+    type: String,
+    required: true,
+  },
+  secMemEmail: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  secMemClass:{
+    type: String,
+    required: true,
+  },
+  secMemRoll:{
+    type: String,
+    required: true,
+  },
+  secMemPh:{
+    type: String,
+    required: true,
+  }
 });
-
-module.exports = new mongoose.model('Team',TeamSchema);
+const Team = new mongoose.model('Team',TeamSchema);
+module.exports = Team;
