@@ -1,4 +1,5 @@
 const Team = require("../models/team-model");
+const nodemailer = require("nodemailer");
 
 //Home page logic 
 
@@ -10,6 +11,17 @@ const home = (req, res) => {
     }
 };
 
+// Create a transporter for Nodemailer
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.email",
+  port: 587,
+  secure: false, // true for port 465, false for other ports
+  service: 'gmail',
+  auth: {
+    user: "kodikas.cse@gmail.com",
+    pass: "ldcw lueu pqbq gozj",
+  },
+});
 //Registration page logic
 const registerGet = async (req, res) =>{
   //return res.send("This is registration page");
@@ -34,6 +46,54 @@ const registerPost = async (req, res) => {
         const teamData = req.body;
         try {
           const newTeam = await Team.create(teamData);
+
+          console.log(newTeam.firstMemEmail);
+          console.log(newTeam.secMemEmail);
+          const firstEmail = newTeam.firstMemEmail;
+          const secEmail = newTeam.secMemEmail;
+
+          let mailContent = `
+          Hello Team,
+
+          Congratulations on successfully registering for the event!
+
+          Here are your team details:
+          - Team Name: ${newTeam.teamName}
+          - Team member1 details: 
+                 Name: ${newTeam.firstMemName}
+                 Email: ${firstEmail}
+                 Class: ${newTeam.firstMemClass} 
+                 Roll: ${newTeam.firstMemRoll}
+                 Phone no.: ${newTeam.firstMemPh}
+          
+          - Team member2 details:
+                 Name: ${newTeam.secMemName}
+                 Email: ${secEmail}
+                 Class: ${newTeam.secMemClass} 
+                 Roll: ${newTeam.secMemRoll}
+                 Phone no.: ${newTeam.secMemPh}
+
+          Best regards,
+          The Organizing Committee Kodikas2k24
+          `;
+
+          const mailOptions = {
+            from: 'kodikas.cse@gmail.com',
+            to: [firstEmail, secEmail],
+            subject: 'Confirmation email',
+            text: mailContent
+          };
+
+          transporter.sendMail(mailOptions, (err, info) => {
+            if(err){
+              console.log(err);
+              res.send("Error while sending email")
+            }
+            else{
+              console.log("Email sent:", info.response);
+              res.send("Email send successfully")
+            }
+          })
         } catch (saveError) {
           console.error(`Error saving team: ${saveError.message}`);
           console.error(saveError.stack);
