@@ -4,7 +4,10 @@ const app = express();
 const router = require("./routers/auth-router");
 const connectDb = require("./utils/db");
 
+const cors = require("cors");
+
 app.use(express.json());
+app.use(cors());
 
 //Mounting the router
 app.use("/api/auth",router);
