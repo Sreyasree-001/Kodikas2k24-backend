@@ -47,6 +47,10 @@ const TeamSchema = new mongoose.Schema({
   secMemPh:{
     type: String,
     required: true,
+  },
+  paymentStatus:{
+    type: Boolean,
+    default: false,
   }
 });
 const Team = new mongoose.model('Team',TeamSchema);
