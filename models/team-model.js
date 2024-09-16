@@ -49,8 +49,8 @@ const TeamSchema = new mongoose.Schema({
     required: true,
   },
   paymentStatus:{
-    type: Boolean,
-    default: false,
+    type: String,
+    default: "false",
   }
 });
 const Team = new mongoose.model('Team',TeamSchema);
