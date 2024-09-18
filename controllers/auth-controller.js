@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: "kodikas.cse@gmail.com",
-    pass: process.env.PASS, 
+    pass: "ldcw lueu pqbq gozj", 
   },
 });
 //Registration page logic
