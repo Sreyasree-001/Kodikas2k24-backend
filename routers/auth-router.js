@@ -10,4 +10,6 @@ router.post("/register",authcontrollers.registerPost);
 
 router.route("/about").get(authcontrollers.about);
 
+router.get("/admin",authcontrollers.admin);
+
 module.exports = router;

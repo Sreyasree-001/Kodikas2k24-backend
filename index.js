@@ -6,8 +6,13 @@ const connectDb = require("./utils/db");
 
 const cors = require("cors");
 
+const ejs = require('ejs');
+
+
 app.use(express.json());
 app.use(cors());
+
+app.set('view engine', ejs);
 
 //Mounting the router
 app.use("/api/auth",router);
