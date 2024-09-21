@@ -12,7 +12,8 @@ const ejs = require('ejs');
 app.use(express.json());
 app.use(cors());
 
-app.set('view engine', ejs);
+app.set('view engine', 'ejs');
+app.set('views', './views');
 
 //Mounting the router
 app.use("/api/auth",router);

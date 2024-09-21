@@ -12,4 +12,6 @@ router.route("/about").get(authcontrollers.about);
 
 router.get("/admin",authcontrollers.admin);
 
+router.post("/update", authcontrollers.update);
+
 module.exports = router;

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <style>
+    h1{
+      margin: 20px;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+    .searchContainer {
+      margin: 5px;
+    }
+    #paid-btn{
+      background-color: rgb(148, 225, 148);
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Panel kodikas2k24</h1>
+  <form class="searchContainer">
+    <label>Enter team name:</label>
+    <input type="search" id="search-input" name="q" placeholder="Search...">
+  </form>
+  <table id="teams-table">
+    <thead>
+      <tr>
+        <th>SL.</th>
+        <th>Team Name</th>
+        <th>First Member name</th>
+        <th>Second Member name</th>
+        <th>First Member Email</th>
+        <th>Second Member Email</th>
+        <th>Payment Status</th>
+        <th>Payment Checking</th>
+      </tr>
+      
+    </thead>
+    <tbody id="teams-body">
+      <% var serialNo = 1; %>
+      <% teams.forEach(function(team) { %>
+        <tr>
+          <td><%= serialNo %></td>
+          <td><%= team.teamName %></td>
+          <td><%= team.firstMemName %></td>
+          <td><%= team.secMemName %></td>
+          <td><%= team.firstMemEmail %></td>
+          <td><%= team.secMemEmail %></td>
+          <td><%= team.paymentStatus %></td>
+          <td><button id="paid-btn" class="paid-btn" data-team-id="<%= team._id %>" >Paid</button>
+            <button id="unpaid-btn" class="unpaid-btn" data-team-id="<%= team._id %>">Unpaid</button></td>
+        </tr>
+        <% serialNo++; %>
+      <% }); %>
+    </tbody>
+  </table>
+  <script>
+    const paidButtons = document.querySelectorAll('.paid-btn');
+    const unpaidButtons = document.querySelectorAll('.unpaid-btn');
+
+      paidButtons.forEach(button => {
+      button.addEventListener('click', async () => {
+      const teamId = button.getAttribute('data-team-id');
+      //console.log(teamId);
+      try {
+        const response = await fetch('/api/auth/update', {
+          method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ teamId, paymentStatus: true }),
+        });
+        // const result = await response.json();
+        // console.log(result);
+
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  });
+
+  unpaidButtons.forEach(button => {
+      button.addEventListener('click', async () => {
+      const teamId = button.getAttribute('data-team-id');
+      //console.log(teamId);
+      try {
+        const response = await fetch('/api/auth/update', {
+          method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ teamId, paymentStatus: false }),
+        });
+        // const result = await response.json();
+        // console.log(result);
+
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  });
+
+  //for searching 
+  const searchInput = document.getElementById('search-input');
+  const teamsTableBody = document.getElementById('teams-body');
+
+  searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    const rows = teamsTableBody.rows;
+
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const teamName = row.cells[1].textContent.toLowerCase();
+      const firstMemName = row.cells[2].textContent.toLowerCase();
+      const secMemName = row.cells[3].textContent.toLowerCase();
+      const firstMemEmail = row.cells[4].textContent.toLowerCase();
+      const secMemEmail = row.cells[5].textContent.toLowerCase();
+
+      if (
+        teamName.includes(searchTerm) ||
+        firstMemName.includes(searchTerm) ||
+        secMemName.includes(searchTerm) ||
+        firstMemEmail.includes(searchTerm) ||
+        secMemEmail.includes(searchTerm)
+      ) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    }
+  });
+
+
+  </script>
+</body>
+</html>

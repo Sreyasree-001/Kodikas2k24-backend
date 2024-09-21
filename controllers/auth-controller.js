@@ -2,6 +2,9 @@ const Team = require("../models/team-model");
 const nodemailer = require("nodemailer");
 const path = require('path');
 
+// const MongoClient = require('mongodb').MongoClient;
+const mongoose = require('mongoose')
+
 //Home page logic 
 
 const home = (req, res) => {
@@ -128,9 +131,33 @@ const about = (req, res) => {
     }
 };
 
-const admin = (req, res) => {
-  const filePath = path.join(process.cwd(), './adminPage', 'index.html');
-  res.sendFile(filePath);
+const admin = async (req, res, next) => {
+  try{
+  const allTeamData = await Team.find().lean();
+  const filePath = path.join(process.cwd(), './adminPage', 'index.ejs');
+    res.render(filePath, { teams: allTeamData });
+  }
+  catch(err) {
+    res.status(400).send(err);
+  }
+  
 }
 
-module.exports = {home,registerGet, registerPost, about, admin};
+const update = async (req, res, next) => {
+  const { teamId, paymentStatus } = req.body;
+  //console.log(teamId + " this is updating");
+  //const allTeamData = Team;
+  const objectId = new mongoose.Types.ObjectId(teamId);
+
+  try {
+    const result = await Team.updateOne({ _id: objectId }, { $set: { paymentStatus } });
+    //here i want to reload the admin page 
+    res.json({ message: 'Payment status updated successfully' })
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: 'Error updating payment status' });
+  }
+}
+
+
+module.exports = {home,registerGet, registerPost, about, admin, update};
