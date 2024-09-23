@@ -13,8 +13,8 @@
       border: 1px solid #ddd;
       padding: 10px;
     }
-    .searchContainer {
-      margin: 5px;
+    .searchContainer, .count, .total {
+      margin: 10px;
     }
     #paid-btn{
       background-color: rgb(148, 225, 148);
@@ -27,6 +27,8 @@
     <label>Enter team name:</label>
     <input type="search" id="search-input" name="q" placeholder="Search...">
   </form>
+  <p class="count">Payment count :</p>
+  <p class="total">Total teams :</p>
   <table id="teams-table">
     <thead>
       <tr>
@@ -133,6 +135,16 @@
     }
   });
 
+  fetch('/api/auth/paychecked')
+  .then(response => response.json())
+  .then(data => {
+    const countElement = document.querySelector('.count');
+    countElement.textContent = `Payment count: ${data.count}`;
+
+    const countTotal = document.querySelector('.total');
+    countTotal.textContent = `Total teams: ${data.total}`;
+  })
+  .catch(error => console.error(error));
 
   </script>
 </body>

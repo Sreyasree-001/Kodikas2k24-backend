@@ -40,7 +40,7 @@ const registerGet = async (req, res) =>{
     // Return all registered teams with their data
     return res.status(201).json({
       success: true,
-      message: "This are the registered teams",
+      message: "These are the registered teams",
       data: allData,
     });
   }
@@ -159,5 +159,29 @@ const update = async (req, res, next) => {
   }
 }
 
+//Paid teams
+const paychecked = async (req, res) =>{
 
-module.exports = {home,registerGet, registerPost, about, admin, update};
+  const allTeamData = await Team.find().lean();
+  const allPaidData = await Team.find({paymentStatus : "true"});
+
+  if (allPaidData.length === 0) {
+    return res.status(201).json({
+      success: true,
+      message: "No teams found with payment-status true",
+      data: [],
+    });
+  } else {
+    // Return all registered teams with their names
+    const teamNames = allPaidData.map(team => team.teamName);
+    return res.status(201).json({
+      success: true,
+      message: "These are the paid teams",
+      total: allTeamData.length,
+      count: teamNames.length,
+      data: teamNames,
+    });
+  }
+}
+
+module.exports = {home,registerGet, registerPost, about, admin, update, paychecked};
