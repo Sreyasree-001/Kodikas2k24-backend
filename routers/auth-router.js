@@ -16,4 +16,7 @@ router.post("/update", authcontrollers.update);
 
 router.get("/paychecked", authcontrollers.paychecked);
 
+router.get("/final", authcontrollers.final);
+router.post("/sendMail", authcontrollers.sendMail);
+
 module.exports = router;

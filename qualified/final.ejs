@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Select finalist</title>
+  <style>
+    h1{
+      margin: 20px;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+    .searchContainer, .count, .total {
+      margin: 10px;
+    }
+    .selected-btn {
+  background-color: #4CAF50; /* Green color */
+  color: #fff; /* White text color */
+  border: none; /* Remove border */
+  padding: 10px 20px; /* Add some padding */
+  font-size: 16px; /* Increase font size */
+  cursor: not-allowed; /* Change cursor to indicate button is disabled */
+}
+    
+  </style>
+</head>
+<body>
+  <h1>Selection of final teams kodikas2k24</h1>
+  <form class="searchContainer">
+    <label>Enter team name:</label>
+    <input type="search" id="search-input" name="q" placeholder="Search...">
+  </form>
+  <!-- <p class="count">Selecion count :</p>
+  <p class="total">Total teams :</p> -->
+  <table id="teams-table">
+    <thead>
+      <tr>
+        <th>SL.</th>
+        <th>Team Name</th>
+        <th>First Member name</th>
+        <th>Second Member name</th>
+        <th>First Member Email</th>
+        <th>Second Member Email</th>
+        <th>Payment Status</th>
+        <th>Payment Checking</th>
+      </tr>
+      
+    </thead>
+    <tbody id="teams-body">
+      <% var serialNo = 1; %>
+      <% teams.forEach(function(team) { %>
+        <tr>
+          <td><%= serialNo %></td>
+          <td><%= team.teamName %></td>
+          <td><%= team.firstMemName %></td>
+          <td><%= team.secMemName %></td>
+          <td><%= team.firstMemEmail %></td>
+          <td><%= team.secMemEmail %></td>
+          <td><%= team.paymentStatus %></td>
+          <td><button id="select-btn" class="select-btn" data-team-id="<%= team._id %>" >Select</button>
+        </tr>
+        <% serialNo++; %>
+      <% }); %>
+    </tbody>
+  </table>
+  <script>
+    const selectButtons = document.querySelectorAll('.select-btn');
+
+        selectButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+        const teamId = button.getAttribute('data-team-id');
+        console.log(teamId);
+        try {
+            const response = await fetch('/api/auth/sendMail', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ teamId }),
+        });
+        // const result = await response.json();
+        // console.log(result);
+        button.textContent = 'Selected';
+        button.classList.add('selected-btn');
+        //window.location.reload();
+        } catch (error) {
+            console.error(error);
+        }
+        });
+        //window.location.reload();
+        
+    });
+  </script>
+</body>
+</html>

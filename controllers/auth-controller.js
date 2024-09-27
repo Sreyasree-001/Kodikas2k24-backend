@@ -184,4 +184,75 @@ const paychecked = async (req, res) =>{
   }
 }
 
-module.exports = {home,registerGet, registerPost, about, admin, update, paychecked};
+//qualified teams for 2nd round
+const final = async (req, res, next) => {
+  try{
+  const allTeamData = await Team.find().lean();
+  const allSelTeam = await Team.find({teamName : [
+    "Eccentric Duo", "Iraters", "X-Treme", "Ravenclaw Runtime", "Auro", "Script Sentries", "Cyber Creeperz", "Jani_na", "RunTime",
+    "GEKKO", "TechNOS", "Marvels", "Rewired", "Z Rod", "Code Thief", "BitMinds", "OOP", "RAVAGERS", "CREATURE", "Questers", "Cosmic weavers"
+  ] });
+  const filePath = path.join(process.cwd(), './qualified', 'final.ejs');
+    res.render(filePath, { teams: allSelTeam });
+  }
+  catch(err) {
+    res.status(400).send(err);
+  }
+  
+}
+
+//send email to qualifiers
+const sendMail = async (req, res, next) => {
+  const { teamId } = req.body;
+  console.log(teamId + " this is updating");
+  //const allTeamData = Team;
+  const objectId = new mongoose.Types.ObjectId(teamId);
+
+  try {
+    const teamData = await Team.findOne({ _id: objectId });
+    //console.log(teamData)
+
+        const firstEmail = teamData.firstMemEmail;
+          const secEmail = teamData.secMemEmail;
+
+          let mailContent = `
+
+        Hello Participant,
+
+      The moment you've been working towards is finally here! 🌟
+
+      We are thrilled to announce that your team has qualified for the Final Round of Kodikas 2k24! Your dedication and skills have brought you this far, and now you’re just one step away from ultimate victory. The entire Kodikas 2k24 team sends their heartfelt congratulations on making it to the grand finale. 💻🏆
+
+        This is your time to shine, and we’re excited to witness the brilliance your team brings to the final challenge!
+    We wish you all the best as you step into the final battle towards triumph! 💫🔥
+
+      Best regards,
+      Team Kodikas 2k24 🖥
+          `;
+
+          const mailOptions = {
+            from: 'kodikas.cse@gmail.com',
+            to: [firstEmail, secEmail],
+            subject: "🎉 You've Qualified for the Final Round of Kodikas 2k24! 🚀",
+            text: mailContent
+          };
+
+          transporter.sendMail(mailOptions, (err, info) => {
+            if(err){
+              console.log(err);
+              res.send("Error while sending email")
+            }
+            else{
+              console.log("Email sent:", info.response);
+              res.send("Email send successfully")
+            }
+          })
+  
+    res.json({ message: 'Payment status updated successfully' })
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: 'Error updating payment status' });
+  }
+}
+
+module.exports = {home,registerGet, registerPost, about, admin, update, paychecked, final, sendMail};
